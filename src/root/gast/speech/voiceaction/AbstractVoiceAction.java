@@ -42,7 +42,7 @@ public abstract class AbstractVoiceAction implements VoiceAction, OnNotUnderstoo
      * must be higher than this in order to report not a command
      * In general this should be a high number
      */
-    private float notACommandConfidenceThreshold = 0.9f;
+    private float notACommandConfidenceThreshold = 0.75f;
 
     /**
      * if the confidence is lower than this, assume the recognizer
