@@ -75,7 +75,7 @@ public class WhyNotUnderstoodListener implements OnNotUnderstoodListener
             executor.reExecute(prompt);
         } else
         {
-            executor.speak(prompt);
+            executor.speak(prompt,VoiceActionExecutor.END_OF_QUERY_SPEAK);
         }
     }
 }

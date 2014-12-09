@@ -112,7 +112,7 @@ public class VoiceActionExecutor
             doRecognitionOnActive();	// prompt to listen after speaking
         } 
         else if (utteranceId.equals(END_OF_QUERY_SPEAK)) {
-        	this.speech.finish();
+        	this.speech.finish();	// finish the interaction
 		}
     }
 
