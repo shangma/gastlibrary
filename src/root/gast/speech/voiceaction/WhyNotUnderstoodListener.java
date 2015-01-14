@@ -19,6 +19,7 @@ import java.util.List;
 
 import root.gast.R;
 import android.content.Context;
+import android.util.Log;
 
 /**
  * respond depending on why not understanding occured
@@ -28,6 +29,7 @@ import android.content.Context;
  */
 public class WhyNotUnderstoodListener implements OnNotUnderstoodListener
 {
+	private final static String TAG = "WhyNotUnderstoodListener";
     private Context context;
     private boolean retry;
     private VoiceActionExecutor executor;
@@ -47,11 +49,13 @@ public class WhyNotUnderstoodListener implements OnNotUnderstoodListener
         switch (reason)
         {
             case OnNotUnderstoodListener.REASON_INACCURATE_RECOGNITION:
+            	Log.d(TAG, "REASON_INACCURATE_RECOGNITION");
                 prompt =
                         context.getResources().getString(
                                 R.string.voiceaction_inaccurate);
                 break;
             case OnNotUnderstoodListener.REASON_NOT_A_COMMAND:
+            	Log.d(TAG, "REASON_NOT_A_COMMAND");
                 String firstMatchingWord = heard.get(0);
                 String promptFormat =
                         context.getResources().getString(
@@ -59,6 +63,7 @@ public class WhyNotUnderstoodListener implements OnNotUnderstoodListener
                 prompt = String.format(promptFormat, firstMatchingWord);
                 break;
             case OnNotUnderstoodListener.REASON_UNKNOWN:
+            	Log.d(TAG, "REASON_UNKNOWN");
             default:
                 prompt =
                         context.getResources().getString(

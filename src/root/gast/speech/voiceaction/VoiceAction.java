@@ -17,6 +17,8 @@ package root.gast.speech.voiceaction;
 
 import java.util.List;
 
+import android.R.integer;
+
 /**
  * a specific piece of speech functionality, 
  * similar to a GUI Dialog but for speech. Instead of Buttons, it 
@@ -51,7 +53,17 @@ public interface VoiceAction
     public void setSpokenPrompt(String prompt);
 
     public boolean hasSpokenPrompt();
+    
+    
+    /**
+     * 
+     * type info
+     */
 
+    public void setActionType(int actionType);
+    public int getActionType();
+    
+    
     public void setNotUnderstood(OnNotUnderstoodListener notUnderstood);
 
     public OnNotUnderstoodListener getNotUnderstood();

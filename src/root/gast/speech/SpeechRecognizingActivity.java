@@ -22,6 +22,7 @@ import java.util.Locale;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Looper;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -85,10 +86,25 @@ public abstract class SpeechRecognizingActivity extends Activity implements
      * execute the RecognizerIntent, then call
      * {@link #receiveWhatWasHeard(List, List)} when done
      */
-    public void recognize(Intent recognizerIntent)
+    public void recognize(final Intent recognizerIntent)
     {
-        startActivityForResult(recognizerIntent,VOICE_RECOGNITION_REQUEST_CODE);
-//    	recognizeDirectly(recognizerIntent);
+//        startActivityForResult(recognizerIntent,VOICE_RECOGNITION_REQUEST_CODE);
+        Log.i(TAG, "Recognition started");
+        
+        /**
+         * use direct recognizer to remove delay on tablet
+         */
+        
+        
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+            	recognizeDirectly(recognizerIntent);
+            }
+        });
+        
+        
+        
     }
 
     /**
@@ -97,6 +113,7 @@ public abstract class SpeechRecognizingActivity extends Activity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
+    	Log.i(TAG, "Recognition result retured");
         if (requestCode == VOICE_RECOGNITION_REQUEST_CODE)
         {
             if (resultCode == RESULT_OK)
@@ -198,16 +215,13 @@ public abstract class SpeechRecognizingActivity extends Activity implements
                     "com.dummy");
         }
         SpeechRecognizer recognizer = getSpeechRecognizer();
-        recognizer.startListening(recognizerIntent);
+    	recognizer.startListening(recognizerIntent);
     }
 
     @Override
     public void onResults(Bundle results)
     {
         Log.d(TAG, "full results");
-        
-        System.out.println("the 3nd caller");
-
         receiveResults(results);
     }
 
@@ -223,6 +237,7 @@ public abstract class SpeechRecognizingActivity extends Activity implements
      */
     private void receiveResults(Bundle results)
     {
+    	Log.d(TAG, "receiveResults Utility Func");
         if ((results != null)
                 && results.containsKey(SpeechRecognizer.RESULTS_RECOGNITION))
         {
@@ -238,6 +253,7 @@ public abstract class SpeechRecognizingActivity extends Activity implements
     @Override
     public void onError(int errorCode)
     {
+    	Log.d(TAG, "onError of Recognition");
         recognitionFailure(errorCode);
     }
 
@@ -247,13 +263,17 @@ public abstract class SpeechRecognizingActivity extends Activity implements
     @Override
     protected void onPause()
     {
+    	Log.d(TAG, "onPause");
+    	
         if (getSpeechRecognizer() != null)
         {
             getSpeechRecognizer().stopListening();
             getSpeechRecognizer().cancel();
             getSpeechRecognizer().destroy();
         }
+        recognizer = null;
         super.onPause();
+        
     }
 
     /**
@@ -289,21 +309,25 @@ public abstract class SpeechRecognizingActivity extends Activity implements
     @Override
     public void onBeginningOfSpeech()
     {
+    	Log.d(TAG, "onBeginningOfSpeech");
     }
 
     @Override
     public void onBufferReceived(byte[] buffer)
     {
+    	Log.d(TAG, "buffer received");
     }
 
     @Override
     public void onRmsChanged(float rmsdB)
     {
+    	Log.d(TAG, "RmsChanged");
     }
 
     @Override
     public void onEvent(int eventType, Bundle params)
     {
+    	Log.d(TAG, "OnEvent");
     }
 
     public void onPartialResultsUnsupported(Bundle partialResults)

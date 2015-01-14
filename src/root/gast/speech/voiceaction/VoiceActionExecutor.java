@@ -18,9 +18,11 @@ package root.gast.speech.voiceaction;
 import java.util.HashMap;
 import java.util.List;
 
+import root.gast.audio.util.SoundPoolPlayer;
 import root.gast.speech.SpeechRecognizingActivity;
 import root.gast.speech.tts.TextToSpeechUtils;
 import android.content.Intent;
+import android.media.SoundPool;
 import android.os.Build;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
@@ -40,6 +42,7 @@ public class VoiceActionExecutor
     private VoiceAction active;
 
     private SpeechRecognizingActivity speech;
+    private SoundPoolPlayer sound;
 
     /**
      * parameter for TTS to identify utterance
@@ -68,6 +71,7 @@ public class VoiceActionExecutor
                 @Override
                 public void onDone(String utteranceId)
                 {
+                	Log.d(TAG, "TTS Done");
                     onDoneSpeaking(utteranceId);
                 }
 
@@ -79,6 +83,7 @@ public class VoiceActionExecutor
                 @Override
                 public void onStart(String utteranceId)
                 {
+                	Log.d(TAG, "TTS Start");
                 }
             });
         }
@@ -162,16 +167,38 @@ public class VoiceActionExecutor
 
         setActive(voiceAction);
 
-        if (voiceAction.hasSpokenPrompt()) // will prompt to listen after speaking
-        {
-            Log.d(TAG, "speaking prompt: " + voiceAction.getSpokenPrompt());
-            tts.speak(voiceAction.getSpokenPrompt(), TextToSpeech.QUEUE_FLUSH,
-                    TextToSpeechUtils.makeParamsWith(EXECUTE_AFTER_SPEAK));
-        }
-        else
-        {
-            doRecognitionOnActive(); // or do listening directly
-        }
+		if (voiceAction.hasSpokenPrompt()) // will prompt to listen after
+											// speaking
+		{
+			if (voiceAction.getActionType() == AbstractVoiceAction.FirstVoiceActionOutofTwo) {
+				
+				Log.e(TAG, "this is where we place the wav file");
+				if (sound != null) {
+					sound.playSound();
+					try {
+						Thread.sleep(1500);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					doRecognitionOnActive();
+				}
+				
+			} else if (voiceAction.getActionType() == AbstractVoiceAction.SecondVoiceActionOutofTwo) {
+				Log.d(TAG,
+						"speaking prompt here: "
+								+ voiceAction.getSpokenPrompt());
+				tts.speak(voiceAction.getSpokenPrompt(),
+						TextToSpeech.QUEUE_FLUSH,
+						TextToSpeechUtils.makeParamsWith(EXECUTE_AFTER_SPEAK));
+			}
+
+//			String outputFile = "/sdcard/hello.wav";
+//			tts.synthesizeToFile(voiceAction.getSpokenPrompt(), TextToSpeechUtils.makeParamsWith(EXECUTE_AFTER_SPEAK), outputFile);
+			
+		} else {
+			doRecognitionOnActive(); // or do listening directly
+		}
     }
 
     private void doRecognitionOnActive()
@@ -179,10 +206,11 @@ public class VoiceActionExecutor
         Intent recognizerIntent =
                 new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, getActive()
                 .getPrompt());
         speech.recognize(recognizerIntent);
+        
     }
 
     private VoiceAction getActive()
@@ -193,5 +221,9 @@ public class VoiceActionExecutor
     private void setActive(VoiceAction active)
     {
         this.active = active;
+    }
+    
+    public void setSoundPlayer(SoundPoolPlayer pSound) {
+    	this.sound = pSound;
     }
 }

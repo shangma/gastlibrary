@@ -15,6 +15,8 @@
  */
 package root.gast.speech.text;
 
+import java.util.List;
+
 
 /**
  * utility class for processing recognition results
@@ -31,7 +33,7 @@ public class WordList
         this.source = source;
         words = source.split("\\s");
     }
-
+    
     public String getStringAfter(int wordIndex)
     {
         int startAt = wordIndex + 1;
@@ -69,6 +71,18 @@ public class WordList
     public String[] getWords()
     {
         return words;
+    }
+    
+    public String[] getLowercase() {
+    	String[] lowerCase = new String[words.length];
+    	for (int i = 0; i < words.length; i++) {
+			lowerCase[i] = words[i].toLowerCase();
+		}
+    	return lowerCase;
+    }
+    
+    public int getNumberOfWord() {
+    	return words.length;
     }
     
     /**

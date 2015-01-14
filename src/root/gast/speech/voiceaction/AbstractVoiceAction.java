@@ -17,6 +17,7 @@ package root.gast.speech.voiceaction;
 
 import java.util.List;
 
+import android.R.integer;
 import android.util.Log;
 
 /**
@@ -27,9 +28,14 @@ public abstract class AbstractVoiceAction implements VoiceAction, OnNotUnderstoo
 {
     private static final String TAG = "AbstractVoiceAction";
     
+    public static final int FirstVoiceActionOutofTwo = 1;
+    public static final int SecondVoiceActionOutofTwo = 2;
+    
     private String prompt;
 
     private String spokenPrompt;
+    
+    private int actionType;
 
     private OnNotUnderstoodListener notUnderstood;
     
@@ -86,6 +92,22 @@ public abstract class AbstractVoiceAction implements VoiceAction, OnNotUnderstoo
         return prompt;
     }
 
+    
+    /**
+     * type info setter and getter
+     */
+    
+    public void setActionType(int actionType)
+    {
+    	this.actionType =  actionType;
+    }
+    
+    public int getActionType()
+    {
+    	return this.actionType;
+    }
+    
+    
     /**
      * @param notUnderstood the notUnderstood to set
      */

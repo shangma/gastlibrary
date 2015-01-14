@@ -231,10 +231,10 @@ public abstract class SpeechRecognizingAndSpeakingActivity extends
     protected void recognitionFailure(int errorCode)
     {
         String message = SpeechRecognitionUtil.diagnoseErrorCode(errorCode);
-        Log.d(TAG, "speech error: " + message);
+        Log.d(TAG, "speech error: " + message + " errorCode: " + errorCode);
     }
     
-    protected TextToSpeech getTts()
+    public TextToSpeech getTts()
     {
         return tts;
     }

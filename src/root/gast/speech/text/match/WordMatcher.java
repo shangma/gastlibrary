@@ -20,6 +20,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import android.util.Log;
+
 
 /**
  * Match incoming words to a set of words, sublasses may encode the strings first
@@ -27,12 +29,16 @@ import java.util.Set;
  */
 public class WordMatcher
 {
+	private final static String TAG = "WordMatcher";
+
     private Set<String> words;
     public static final int NOT_IN = -1;
+    private String currentMatched;
 
     public WordMatcher(String... wordsIn)
     {
         this(Arrays.asList(wordsIn));
+        currentMatched="";
     }
 
     public WordMatcher(List<String> wordsIn)
@@ -85,6 +91,7 @@ public class WordMatcher
         int ct = 0;
         for (String word : words)
         {
+        	Log.d(TAG, "Comparing " + word + " and " + wordCheck);
             if (word.equals(wordCheck))
             {
                 which = ct;
